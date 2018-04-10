@@ -83,8 +83,11 @@ module RSpec
         return unless @method_is_proxied
 
         remove_method_from_definition_target
-        @method_stasher.restore if @method_stasher.method_is_stashed?
-        restore_original_visibility
+
+        if @method_stasher.method_is_stashed?
+          @method_stasher.restore
+          restore_original_visibility
+        end
 
         @method_is_proxied = false
       end
@@ -102,10 +105,7 @@ module RSpec
 
       # @private
       def restore_original_visibility
-        return unless @original_visibility &&
-          MethodReference.method_defined_at_any_visibility?(object_singleton_class, @method_name)
-
-        object_singleton_class.__send__(@original_visibility, method_name)
+        method_owner.__send__(@original_visibility, @method_name)
       end
 
       # @private
@@ -259,7 +259,11 @@ module RSpec
 
       end
 
-    private
+      def method_owner
+        @method_owner ||=
+          # We do this because object.method might be overridden.
+          ::RSpec::Support.method_handle_for(object, @method_name).owner
+      end
 
       def remove_method_from_definition_target
         definition_target.__send__(:remove_method, @method_name)

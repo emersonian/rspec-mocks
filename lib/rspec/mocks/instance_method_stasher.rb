@@ -114,32 +114,12 @@ module RSpec
         # `#<MyClass:0x007fbb94e3cd10>`, rather than the expected `MyClass`.
         owner = owner.class unless Module === owner
 
-        # On some 1.9s (e.g. rubinius) aliased methods
-        # can report the wrong owner. Example:
-        # class MyClass
-        #   class << self
-        #     alias alternate_new new
-        #   end
-        # end
-        #
-        # MyClass.owner(:alternate_new) returns `Class` when incorrect,
-        # but we need to consider the owner to be `MyClass` because
-        # it is not actually available on `Class` but is on `MyClass`.
-        # Hence, we verify that the owner actually has the method defined.
-        # If the given owner does not have the method defined, we assume
-        # that the method is actually owned by @klass.
-        #
-        # On 1.8, aliased methods can also report the wrong owner. Example:
-        # module M
-        #   def a; end
-        #   module_function :a
-        #   alias b a
-        #   module_function :b
-        # end
-        # The owner of M.b is the raw Module object, instead of the expected
-        # singleton class of the module
-        return true if RUBY_VERSION < '1.9' && owner == @object
-        owner == @klass || !(method_defined_on_klass?(owner))
+        owner == @klass ||
+          # When `extend self` is used, and not under `allow_any_instance_of`
+          # nor `expect_any_instance_of`.
+          (owner.singleton_class == @klass &&
+            !Mocks.space.any_instance_recorder_for(owner, true)) ||
+          !(method_defined_on_klass?(owner))
       end
     end
   end

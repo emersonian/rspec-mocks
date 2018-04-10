@@ -1,3 +1,56 @@
+### Development
+[Full Changelog](http://github.com/rspec/rspec-mocks/compare/v3.10.2...4-0-dev)
+
+Breaking Changes:
+
+* Ruby < 2.3 is no longer supported. (Phil Pirozhkov, #1349)
+* Extract monkey-patching `should_receive`/`stub` syntax. (Phil Pirozhkov, #1365)
+* Remove the deprecated `RSpec::Mocks::CannotSupportArgMutationsError` constant.
+  (Phil Pirozhkov, #1400)
+* Change the default setting for `RSpec::Mocks::Configuration#verify_partial_doubles`
+  to `true`. (Phil Pirozhkov, #1409)
+* Remove deprecated `allow_message_expectations_on_nil` example method.
+  (Phil Pirozhkov, #1410)
+
+Enhancements:
+
+* Add `and_invoke` implementation for configuring responses to `receive`
+  (and `receive_messages`) with multiple callable objects. (Kyle Smith, #1411)
+
+Bug Fixes:
+
+* Support keyword argument semantics when constraining argument expectations using
+  `with` on Ruby 3.0+ (Yusuke Endoh, #1394)
+* Fix stubbing of prepended-only methods. (Lin Jen-Shin, #1218)
+
+### 3.10.2 / 2021-01-27
+[Full Changelog](http://github.com/rspec/rspec-mocks/compare/v3.10.1...v3.10.2)
+
+Bug Fixes:
+
+* Support keyword arguments with `and_call_original` on Ruby 3.0.
+  (Bryan Powell, #1385)
+* `RSpec::Mocks::Constant#previously_defined?` is now always a boolean.
+  (Phil Pirozhkov, #1397)
+
+### 3.10.1 / 2020-12-27
+[Full Changelog](http://github.com/rspec/rspec-mocks/compare/v3.10.0...v3.10.1)
+
+Bug Fixes:
+
+* Issue `ArgumentError` rather than `TypeError` when unsupported methods on
+  unsupported objects are attempted to be stubbed. (@zhisme, #1357)
+
+### 3.10.0 / 2020-10-30
+[Full Changelog](http://github.com/rspec/rspec-mocks/compare/v3.9.1...v3.10.0)
+
+Enhancements:
+* Add the ability to set a custom error generator in `MessageExpectation`.
+  This will allow rspec-expectations to inject a custom failure message.
+  (Benoit Tigeot and Nicolas Zermati, #1312)
+* Return the result of the block passed to `RSpec::Mocks.with_temporary_scope`
+  when block run. (@expeehaa, #1329)
+
 ### 3.9.1 / 2019-12-31
 [Full Changelog](http://github.com/rspec/rspec-mocks/compare/v3.9.0...v3.9.1)
 
